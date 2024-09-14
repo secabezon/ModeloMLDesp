@@ -178,8 +178,7 @@ class MotorTypeTransformer(BaseEstimator, TransformerMixin):
         return self
     
     def transform(self, X):
-        X = X.copy()  # Asegúrate de no modificar los datos originales
-        print(X.columns)
+        X = X.copy() 
         # Aplica las transformaciones
         X['motor_type_gas'] = X.apply(lambda x: 1 if x['motor_type_petrol and gas'] == 1 else x['motor_type_gas'], axis=1)
         X['motor_type_petrol'] = X.apply(lambda x: 1 if x['motor_type_petrol and gas'] == 1 else x['motor_type_petrol'], axis=1)
