@@ -158,3 +158,33 @@ class CategoricalOneHotEncoder(BaseEstimator, TransformerMixin):
         X_copy = pd.concat([X_copy, df_encoded], axis=1)
 
         return X_copy
+    
+class ColumnSelector(BaseEstimator, TransformerMixin):
+    def __init__(self, columns):
+        self.columns = columns
+        
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X):
+        columnas=[]
+        for columna in self.columns:
+            if columna in X.columns:
+                columnas.append(columna)
+        return X[columnas]
+    
+class MotorTypeTransformer(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X):
+        X = X.copy()  # Asegúrate de no modificar los datos originales
+        print(X.columns)
+        # Aplica las transformaciones
+        X['motor_type_gas'] = X.apply(lambda x: 1 if x['motor_type_petrol and gas'] == 1 else x['motor_type_gas'], axis=1)
+        X['motor_type_petrol'] = X.apply(lambda x: 1 if x['motor_type_petrol and gas'] == 1 else x['motor_type_petrol'], axis=1)
+        
+        # Elimina la columna 'motor_type_petrol and gas'
+        X = X.drop(['motor_type_petrol and gas'], axis=1)
+        
+        return X
